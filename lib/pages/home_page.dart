@@ -66,6 +66,7 @@ class _HomeState extends State<Home> {
                         onPressed: () {
                           // settings page
                           // print('account button clicked');
+                          Navigator.pushNamed(context, '/settings_page');
                         },
                         icon: Icon(
                           Icons.account_circle_rounded,

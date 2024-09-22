@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kyu_q/widgets/order_card.dart';
 import 'package:kyu_q/widgets/order.dart';
-
-void main() {
-  runApp(const MaterialApp(
-    home: OrderPage(),
-  ));
-}
+import 'package:kyu_q/widgets/bottom_nav_bar.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -18,7 +13,30 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _activeTabIndex = 0;
+  // int _selectedBottomIndex = 0;
 
+  int _selectedBottomIndex = 1; // Set default active index for orders page
+
+  void _onBottomNavTap(int index) {
+    if (index != _selectedBottomIndex) {
+      setState(() {
+        _selectedBottomIndex = index;
+
+        // Navigate based on selected index
+        if (index == 0) {
+          Navigator.pushNamed(context, '/home_page');
+        } else if (index == 1) {
+          // Already on orders page, no need to navigate
+        } else if (index == 2) {
+          Navigator.pushNamed(context, '/statistics_page');
+        } else if (index == 3) {
+          Navigator.pushNamed(context, '/inventory_page');
+        }
+      });
+    }
+  }
+
+  // List structure and data of customer orders
   final List<Order> originalOrders = [
     Order(
       orderId: '0381/61',
@@ -30,7 +48,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
       },
     ),
     Order(
-      orderId: '0382/61',
+      orderId: '0382/62',
       username: 'Aarav Patel',
       items: {
         'Masala Chai': 'x2',
@@ -45,7 +63,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
       },
     ),
     Order(
-      orderId: '0383/61',
+      orderId: '0383/63',
       username: 'Isha Sharma',
       items: {
         'Biryani': 'x1',
@@ -54,7 +72,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
       },
     ),
     Order(
-      orderId: '0384/61',
+      orderId: '0384/64',
       username: 'Ayush Bharadwaj',
       items: {
         'Chole Bhature': 'x2',
@@ -63,7 +81,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
       },
     ),
     Order(
-      orderId: '0385/61',
+      orderId: '0385/65',
       username: 'Diya Mehta',
       items: {
         'Butter Chicken': 'x1',
@@ -72,7 +90,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
       },
     ),
     Order(
-      orderId: '0386/61',
+      orderId: '0386/66',
       username: 'Ravi Kumar',
       items: {
         'Dosa': 'x2',
@@ -84,7 +102,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
       },
     ),
     Order(
-      orderId: '0387/61',
+      orderId: '0387/67',
       username: 'Sanya Gupta',
       items: {
         'Pav Bhaji': 'x2',
@@ -93,7 +111,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
       },
     ),
     Order(
-      orderId: '0388/61',
+      orderId: '0388/68',
       username: 'Amit Joshi',
       items: {
         'Dal Makhani': 'x2',
@@ -103,11 +121,12 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
     ),
   ];
 
-  // create different list on different tabs
+  // three different list of managing the order states
   List<Order> newOrders = [];
   List<Order> inProgressOrders = [];
   List<Order> deliveredOrders = [];
 
+  // control order management tabs
   @override
   void initState() {
     super.initState();
@@ -116,21 +135,20 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
 
     _tabController.addListener(() {
       setState(() {
-        _activeTabIndex = _tabController.index; // Update the active tab index when the tab changes
+        _activeTabIndex = _tabController.index;
       });
     });
 
-    newOrders = List.from(originalOrders); // new orders
-    inProgressOrders = []; // orders confirmed
-    deliveredOrders = []; // orders delivered
+    newOrders = List.from(originalOrders);
+    inProgressOrders = [];
+    deliveredOrders = [];
   }
 
+  // main widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFD8D8D8),
-
-      // -------------- APP BAR TOP --------------
+      backgroundColor: const Color(0xFFFD8D8D8),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(150.0),
         child: AppBar(
@@ -142,251 +160,161 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const Text(
-                  'Manage Orders',
-                  style: TextStyle(
-                    fontFamily: 'Sen',
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: 32.0,
-                  ),
-                ),
-                const SizedBox(height: 24.0),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 50.0,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context); // navigate back to home page
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.white, // Background color
-                          foregroundColor: Colors.black, // Text color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.home_outlined,
-                          color: Colors.black,
-                        ),
+                    const Text(
+                      'Manage Orders',
+                      style: TextStyle(
+                        fontFamily: 'Sen',
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 35.0,
                       ),
                     ),
-                    Container(
-                      width: 70.0,
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _activeTabIndex = 0; // Set active index to 0
-                            _tabController.index = 0; // Switch to the new orders tab
-                          });
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: _activeTabIndex == 0
-                              ? Color(0xFFFF5DB00)
-                              : Colors.white, // Change bg color based on the active tab
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'New',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 120.0,
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _activeTabIndex = 1; // Set active index to 1
-                            _tabController.index = 1; // Switch to the in-progress tab
-                          });
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: _activeTabIndex == 1
-                              ? Color(0xFFFF5DB00)
-                              : Colors.white, // Change bg color based on the active tab
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'In Progress',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 105.0,
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _activeTabIndex = 2; // Set active index to 2
-                            _tabController.index = 2; // Switch to the delivered tab
-                          });
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: _activeTabIndex == 2
-                              ? Color(0xFFFF5DB00)
-                              : Colors.white, // Change bg color based on the active tab
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Delivered',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+
+                    // Admin cta btn
+                    IconButton(
+                      onPressed: () {
+                        // go to settings page
+                        Navigator.pushNamed(context, '/settings_page');
+                      },
+                      icon: Icon(
+                        Icons.account_circle_rounded,
+                        color: Colors.white,
+                        size: 30.0,
                       ),
                     ),
                   ],
-                )
-                // Additional buttons can be added here if needed
+                ),
+
+                const SizedBox(height: 18.0),
+
+                // slide to reveal the tabs when screen size is less
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildTabButton('New Orders', 0),
+                      SizedBox(width: 16.0),
+                      _buildTabButton('In Progress', 1),
+                      SizedBox(width: 16.0),
+                      _buildTabButton('Delivered', 2),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-
-          toolbarHeight: 140.0,
+          toolbarHeight: 150.0,
           elevation: 0.0,
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(4.0),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Color(0xFFF000000), // Bottom border color
-                    width: 3.0, // Bottom border width
-                  ),
-                ),
-              ),
-            ),
-          ),
         ),
       ),
 
 
-        // ---------- BODY ELEMENTS -----------
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            // New Orders
-            ListView(
-              children: <Widget>[
-                Column(
-                  children: newOrders.map((order) => OrderCard(
-                    order: order,
-                    cancel: () {
-                      setState(() {
-                        newOrders.remove(order); // remove from new orders list
-                      });
-                    },
-                    ready: () {
-                      setState(() {
-                        newOrders.remove(order); // remove from new orders list
-                        inProgressOrders.add(order); // add to in-progress orders list
-                      });
-                    },
-                    currentTab: 'new', // Pass the current tab value
-                  )).toList(),
-                ),
-              ],
-            ),
+      // Orders List presentation
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          // New Orders Tab
+          _buildOrderList(newOrders, 'new', inProgressOrders),
+          // In Progress Orders Tab
+          _buildOrderList(inProgressOrders, 'in-progress', deliveredOrders),
+          // Delivered Orders Tab
+          _buildOrderList(deliveredOrders, 'delivered', []),
+        ],
+      ),
 
-            // In Progress Orders
-            ListView(
-              children: <Widget>[
-                Column(
-                  children: inProgressOrders.map((order) => OrderCard(
-                    order: order,
-                    cancel: () {
-                      setState(() {
-                        inProgressOrders.remove(order); // remove from in-progress orders list
-                      });
-                    },
-                    ready: () {
-                      setState(() {
-                        inProgressOrders.remove(order); // remove from in-progress orders list
-                        deliveredOrders.add(order); // add to delivered orders list
-                      });
-                    },
-                    currentTab: 'in-progress', // Pass the current tab value
-                  )).toList(),
-                ),
-              ],
-            ),
+      // Bottom NavBar
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: _selectedBottomIndex,
+        onTap: _onBottomNavTap,
+      ),
+    );
+  }
 
-            // Delivered Orders
-            ListView(
-              children: <Widget>[
-                Column(
-                  children: deliveredOrders.map((order) => OrderCard(
-                    order: order,
-                    cancel: () {}, // No action required here
-                    ready: () {
-                      setState(() {
-                        deliveredOrders.remove(order); // clear the order from the list
-                      });
-                    },
-                    currentTab: 'delivered', // Pass the current tab value
-                  )).toList(),
-                ),
-              ],
+  // Helper method to build icons with custom styling for the bottom app navbar
+  Widget _buildBottomNavIcon(IconData icon, int index) {
+    bool isActive = _selectedBottomIndex == index;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        if (isActive) // Show yellow circle only if active
+          Container(
+            width: 36.0, // Adjust size as needed
+            height: 36.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.yellow, // Background color
             ),
-          ],
-      )
+          ),
+        Icon(
+          icon,
+          color: isActive ? Colors.black : Colors.grey, // Icon color
+        ),
+      ],
+    );
+  }
+
+  // top navigation individual tabs in orders page appbar
+  Widget _buildTabButton(String label, int index) {
+    return Container(
+      width: 120.0,
+      child: TextButton(
+        onPressed: () {
+          setState(() {
+            _activeTabIndex = index;
+            _tabController.index = index;
+          });
+        },
+        style: TextButton.styleFrom(
+          backgroundColor: _activeTabIndex == index
+              ? Color(0xFFFFFEC48)
+              : Colors.white,
+          foregroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // List of order cards
+  Widget _buildOrderList(List<Order> orders, String currentTab, List<Order> nextTabOrders) {
+    return ListView(
+      children: <Widget>[
+        Column(
+          children: orders.map((order) => OrderCard(
+            order: order,
+            cancel: () {
+              setState(() {
+                orders.remove(order);
+              });
+            },
+            ready: () {
+              setState(() {
+                orders.remove(order);
+                nextTabOrders.add(order);
+              });
+            },
+            currentTab: currentTab,
+          )).toList(),
+        ),
+      ],
     );
   }
 }
