@@ -11,10 +11,9 @@ class StatisticsPage extends StatefulWidget {
 class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _activeTabIndex = 0;
-  int _selectedBottomIndex = 2; // Set default active index for statistics page
+  int _selectedBottomIndex = 2;
 
-  // Tabs data for statistics
-  final List<String> tabs = ['Revenue', 'Order Insights', 'Top Customers', 'Order History'];
+  final List<String> tabs = ['Order History', 'Financials'];
 
   void _onBottomNavTap(int index) {
     if (index != _selectedBottomIndex) {
@@ -26,7 +25,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
         } else if (index == 1) {
           Navigator.pushNamed(context, '/orders_page');
         } else if (index == 2) {
-          // Already on statistics page, no need to navigate
+          // current page
         } else if (index == 3) {
           Navigator.pushNamed(context, '/inventory_page');
         }
@@ -67,7 +66,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Vendor Statistics',
+                      'Statistics',
                       style: TextStyle(
                         fontFamily: 'Sen',
                         fontWeight: FontWeight.w600,
@@ -87,8 +86,9 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 18.0),
-                // Slide to reveal the tabs when screen size is less
+
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -106,20 +106,18 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
           elevation: 0.0,
         ),
       ),
-      // TabBar content
+
+      // appbar tabs
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Revenue Tab
-          _buildRevenueTab(),
-          // Order Insights Tab
-          _buildOrderInsightsTab(),
-          // Top Customers Tab
-          _buildTopCustomersTab(),
           // Order History Tab
           _buildOrderHistoryTab(),
+          // Financial Stats Tab
+          _buildFinancialStatsTab(),
         ],
       ),
+
       // Bottom NavBar
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedBottomIndex,
@@ -128,10 +126,12 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     );
   }
 
-  // Tab buttons for the appbar
+  // ---------- Custom Widgets -------------
+
   Widget _buildTabButton(String label, int index) {
     return Container(
-      width: 140.0,
+      margin: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+      width: 125.0,
       child: TextButton(
         onPressed: () {
           setState(() {
@@ -149,7 +149,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
           child: Text(
             label,
             style: TextStyle(
@@ -164,76 +164,93 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     );
   }
 
-  // Revenue Tab Content
-  Widget _buildRevenueTab() {
+  // Financials Tab
+  Widget _buildFinancialStatsTab() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Total Revenue: \$12,300', style: _statsTextStyle()),
-          SizedBox(height: 10.0),
-          Text('Orders Completed: 150', style: _statsTextStyle()),
-          SizedBox(height: 10.0),
-          Text('Pending Payments: \$500', style: _statsTextStyle()),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildStatsCard('Net Profit', '₹9,000'),
+            SizedBox(height: 30.0),
+            _buildStatsCard('Orders Completed', '150'),
+            SizedBox(height: 10.0),
+            _buildStatsCard('Pending Payments', '₹500'),
+            SizedBox(height: 10.0),
+            _buildStatsCard('Refunds Issued', '₹300'),
+            SizedBox(height: 10.0),
+            _buildStatsCard('Total Revenue', '₹12,300'),
+          ],
+        ),
       ),
     );
   }
 
-  // Order Insights Tab Content
-  Widget _buildOrderInsightsTab() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Average Order Value: \$82', style: _statsTextStyle()),
-          SizedBox(height: 10.0),
-          Text('Peak Order Time: 6:00 PM - 9:00 PM', style: _statsTextStyle()),
-          SizedBox(height: 10.0),
-          Text('Most Ordered Item: Pizza (x40)', style: _statsTextStyle()),
-        ],
-      ),
-    );
-  }
-
-  // Top Customers Tab Content
-  Widget _buildTopCustomersTab() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Top Customer: John Doe - 20 orders', style: _statsTextStyle()),
-          SizedBox(height: 10.0),
-          Text('Total Spent: \$2,000', style: _statsTextStyle()),
-          SizedBox(height: 10.0),
-          Text('Repeat Customers: 35%', style: _statsTextStyle()),
-        ],
-      ),
-    );
-  }
-
-  // Order History Tab Content
+  // Order History Tab
   Widget _buildOrderHistoryTab() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Total Orders: 200', style: _statsTextStyle()),
-          SizedBox(height: 10.0),
-          Text('Last Order Date: 21st Sept 2024', style: _statsTextStyle()),
-          SizedBox(height: 10.0),
-          Text('Total Revenue from Orders: \$10,000', style: _statsTextStyle()),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // Center the cards vertically
+          crossAxisAlignment: CrossAxisAlignment.stretch, // Cards will take up the full width
+          children: [
+            _buildStatsCard('Total Orders', '300'),
+            SizedBox(height: 30.0),
+            _buildStatsCard('Total Cancelled Orders', '20'),
+            SizedBox(height: 10.0),
+            _buildStatsCard('Last Order Date', '21/09/2024'),
+            SizedBox(height: 10.0),
+            _buildStatsCard('Most Ordered Item', 'Veg Burger'),
+            SizedBox(height: 10.0),
+            _buildStatsCard('Average Order Value', '₹80'),
+          ],
+        ),
       ),
     );
   }
 
-  // Helper Text Style
-  TextStyle _statsTextStyle() {
-    return const TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w500,
-      color: Colors.black,
+  // statistics cards
+  Widget _buildStatsCard(String title, String value) {
+    return Card(
+      margin: const EdgeInsets.fromLTRB(14.0, 0.0, 14.0, 0.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      color: Colors.white,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                value,
+                textAlign: TextAlign.center, // Center value
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

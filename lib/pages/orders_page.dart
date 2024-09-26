@@ -13,7 +13,6 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _activeTabIndex = 0;
-  // int _selectedBottomIndex = 0;
 
   int _selectedBottomIndex = 1; // Set default active index for orders page
 
@@ -26,7 +25,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
         if (index == 0) {
           Navigator.pushNamed(context, '/home_page');
         } else if (index == 1) {
-          // Already on orders page, no need to navigate
+          // current page
         } else if (index == 2) {
           Navigator.pushNamed(context, '/statistics_page');
         } else if (index == 3) {
@@ -36,7 +35,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
     }
   }
 
-  // List structure and data of customer orders
+  // Data Structure for List of orders
   final List<Order> originalOrders = [
     Order(
       orderId: '0381/61',
@@ -121,12 +120,12 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
     ),
   ];
 
-  // three different list of managing the order states
+  // Three list per order states
   List<Order> newOrders = [];
   List<Order> inProgressOrders = [];
   List<Order> deliveredOrders = [];
 
-  // control order management tabs
+  // order management
   @override
   void initState() {
     super.initState();
@@ -173,7 +172,6 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
                       ),
                     ),
 
-                    // Admin cta btn
                     IconButton(
                       onPressed: () {
                         // go to settings page
@@ -213,7 +211,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
       ),
 
 
-      // Orders List presentation
+      // Show Lists
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -234,7 +232,6 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
     );
   }
 
-  // Helper method to build icons with custom styling for the bottom app navbar
   Widget _buildBottomNavIcon(IconData icon, int index) {
     bool isActive = _selectedBottomIndex == index;
     return Stack(
@@ -257,7 +254,6 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
     );
   }
 
-  // top navigation individual tabs in orders page appbar
   Widget _buildTabButton(String label, int index) {
     return Container(
       width: 120.0,
@@ -293,7 +289,7 @@ class _OrderPageState extends State<OrderPage> with SingleTickerProviderStateMix
     );
   }
 
-  // List of order cards
+  // List of cards
   Widget _buildOrderList(List<Order> orders, String currentTab, List<Order> nextTabOrders) {
     return ListView(
       children: <Widget>[

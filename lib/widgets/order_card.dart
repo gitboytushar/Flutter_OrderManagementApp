@@ -5,14 +5,14 @@ class OrderCard extends StatefulWidget {
   final Order order;
   final VoidCallback cancel;
   final VoidCallback ready;
-  final String currentTab; // 'new', 'in-progress', or 'delivered'
+  final String currentTab;
 
   const OrderCard({
     super.key,
     required this.order,
     required this.cancel,
     required this.ready,
-    required this.currentTab, // pass the current tab name here
+    required this.currentTab,
   });
 
   @override
@@ -68,7 +68,7 @@ class _OrderCardState extends State<OrderCard> {
     // Main widget
     return SafeArea(
       child: Card(
-        margin: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+        margin: const EdgeInsets.fromLTRB(14.0,14.0, 14.0, 0.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20.0),
@@ -142,8 +142,8 @@ class _OrderCardState extends State<OrderCard> {
                                   widget.cancel();
                                 },
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Color(0xFFFFFC4C4), // Background color
-                                  foregroundColor: Colors.black, // Text color
+                                  backgroundColor: Color(0xFFFFFC4C4),
+                                  foregroundColor: Colors.black,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                   ),
@@ -181,8 +181,8 @@ class _OrderCardState extends State<OrderCard> {
                                   widget.ready();
                                 },
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Color(0xFFFC7FFBE), // Background color
-                                  foregroundColor: Colors.black, // Text color
+                                  backgroundColor: Color(0xFFFC7FFBE),
+                                  foregroundColor: Colors.black,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                   ),
